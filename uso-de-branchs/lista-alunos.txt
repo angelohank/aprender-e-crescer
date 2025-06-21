@@ -1,3 +1,0 @@
-Esse arquivo tem como objetivo listar os alunos presentes na aula do dia 25/06/2025
-
-algum  outro conteudo aqui pra acontecer o conflito
