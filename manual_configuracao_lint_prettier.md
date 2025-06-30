@@ -83,22 +83,6 @@ Para evitar conflitos entre ESLint e Prettier, instale mais dois pacotes:
 
 `npm install --save-dev eslint-config-prettier eslint-plugin-prettier`
 
-Altere seu `.eslintrc.json`:
-```
-{
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
-  },
-  "extends": ["eslint:recommended", "plugin:prettier/recommended"],
-  "plugins": ["prettier"],
-  "rules": {
-    "prettier/prettier": "error"
-  }
-}
-```
-
 🖥️ 10. Configuração do VS Code para Formatação Automática
 Ativar format on save:
 
@@ -107,12 +91,6 @@ Vá em Configurações (Ctrl + ,).
 Pesquise "Format On Save" e marque como habilitado.
 
 Definir `Prettier` como formatador padrão:
-
-Pesquise por Default Formatter.
-
-Selecione:
-
-esbenp.prettier-vscode
 
 📝 11. Comandos Úteis
 ✅ Rodar o ESLint manualmente:
