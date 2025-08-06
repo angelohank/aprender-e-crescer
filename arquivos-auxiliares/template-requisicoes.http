@@ -1,0 +1,49 @@
+### GET simples (sem parâmetros)
+GET http://localhost:3000/usuarios
+
+###
+
+### GET com query params
+GET http://localhost:3000/usuarios?nome=jo&limit=2
+
+###
+
+### GET com path param
+GET http://localhost:3000/usuarios/1
+
+###
+
+### POST com body (criar usuário)
+POST http://localhost:3000/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Ângelo",
+  "idade": 25
+}
+
+###
+
+### PUT com path param e body (atualizar usuário inteiro)
+PUT http://localhost:3000/usuarios/1
+Content-Type: application/json
+
+{
+  "nome": "Ângelo Atualizado",
+  "idade": 26
+}
+
+###
+
+### PATCH com path param e body (atualizar parcialmente)
+PATCH http://localhost:3000/usuarios/1
+Content-Type: application/json
+
+{
+  "idade": 30
+}
+
+###
+
+### DELETE com path param (deletar usuário)
+DELETE http://localhost:3000/usuarios/1
