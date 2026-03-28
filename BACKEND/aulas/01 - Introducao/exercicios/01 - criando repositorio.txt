@@ -1,0 +1,5 @@
+1 - Crie um repositório no GitHub chamado “aprender-e-crescer-2026”
+
+2 - Adicione uma descrição para esse repositório (não readme)
+
+3 - Clone o repositório para a sua máquina

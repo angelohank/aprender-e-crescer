@@ -1,0 +1,8 @@
+Acesse o repositório da matéria, procurando pela aula de hoje
+- Procure pela pasta de exercicios
+- Copie o conteúdo do arquivo chamado exercicios-query-params.js
+	- faça o mesmo para o exericício de desestruturação
+- crie um novo arquivo na sua máquina (com a extensão .js)
+- cole o conteúdo que copiou
+- Realize os exercícios propostos
+- Ao final, chame o professor para conferência e avaliação
