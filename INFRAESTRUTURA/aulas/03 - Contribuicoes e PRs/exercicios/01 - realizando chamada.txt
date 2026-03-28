@@ -1,0 +1,21 @@
+Objetivo
+
+Fazer a lista de chamada da aula através de PRs
+
+
+01 - Realizar um fork do repositório principa
+https://github.com/angelohank/aprender-e-crescer
+
+02 - Clonar o projeto que você fez o fork pra sua máquina-o projeto deve ser o que está no seu perfil-github.com/seunome/aprender-e-crescer
+
+03 - No arquivo “lista-de-chamada”, adicionar o seu nome
+04 - Adicionar o arquivo à área de stage-git add .
+05 - Fazer o commit do arquivo
+06 - Fazer o push da sua alteração-git push origin main
+	isso para o caso de estar usando a branch padrão
+
+A partir daqui, vamos para o github
+
+07 - Acesse o repositório que fez o clone e realizou a alteração
+08 - Procure pelo botão “contribute”, ou “contribuir”
+09 - Abrir o PR
