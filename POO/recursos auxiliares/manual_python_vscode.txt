@@ -1,0 +1,62 @@
+Manual: Instalando Python + VS Code no Windows e Rodando Scripts
+
+1.  Instalando o Python
+
+Passo 1: Baixar o Python Acesse: https://www.python.org/downloads/
+Clique em “Download Python” (versão mais recente)
+
+Passo 2: Instalar Execute o arquivo baixado Marque a opção: Add Python
+to PATH Clique em Install Now
+
+Passo 3: Verificar instalação Abra o CMD (Win + R → digite cmd)
+
+Digite: python –version
+
+Se aparecer algo como: Python 3.x.x Está tudo certo
+
+2.  Instalando o VS Code
+
+Passo 1: Baixar Acesse: https://code.visualstudio.com/ Clique em
+Download for Windows
+
+Passo 2: Instalar Marque: - Add to PATH - Open with Code
+
+Clique em Next → Install
+
+3.  Instalar extensão Python
+
+Abra o VS Code Vá em Extensions (Ctrl + Shift + X) Procure por “Python”
+Instale a extensão da Microsoft
+
+4.  Rodando um script Python
+
+Passo 1: Criar arquivo Abra o VS Code Crie um arquivo chamado: hello.py
+
+Passo 2: Escrever código print(“Olá, mundo!”)
+
+Passo 3: Executar
+
+Opção 1: Clique no botão Run
+
+Opção 2: Abra o terminal (Ctrl + ’) Digite: python hello.py
+
+Saída esperada: Olá, mundo!
+
+5.  Teste final
+
+Digite no terminal: python
+
+Se aparecer: >>>
+
+Digite: print(“Funcionando!”)
+
+Para sair: exit()
+
+Problemas comuns
+
+“python não é reconhecido” Solução: reinstalar e marcar Add Python to
+PATH
+
+VS Code não executa Solução: instalar extensão Python
+
+Fim do manual

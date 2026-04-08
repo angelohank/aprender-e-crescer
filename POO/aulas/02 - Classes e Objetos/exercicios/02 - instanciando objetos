@@ -1,0 +1,8 @@
+Instancia objetos a partir de classes criadas
+
+1 - defina duas classes diferentes das utilizadas para exemplos
+2 - instancie 3 objetos a partir de cada uma das classes
+3 - imprima o tipo de cada um dos objetos
+4 - imprima o endereço de memória de cada objeto
+5 - verifique e imprima se um objeto é igual o outro (escolha dois objetos quaisquer)
+6 - verifique e imprima se um objeto corresponde à instancia de uma determinada classe (escolha um objeto qualquer)
