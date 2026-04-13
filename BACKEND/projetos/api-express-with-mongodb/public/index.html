@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <title>Login com Google</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    body {
+      font-family: Arial;
+      max-width: 600px;
+      margin: 30px auto;
+      text-align: center;
+    }
+    #user-info {
+      margin-top: 20px;
+    }
+    img {
+      border-radius: 50%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Login com Google</h1>
+
+  <div id="g_id_onload"
+       data-client_id="338369318354-e05koak8s4r4oepomnrb0h4qm0ltnvsk.apps.googleusercontent.com"
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-shape="rectangular"
+       data-theme="outline"
+       data-text="sign_in_with"
+       data-size="large"
+       data-logo_alignment="left"
+       id="btn-login">
+  </div>
+
+  <div id="user-info"></div>
+
+  <script>
+    async function handleCredentialResponse(response) {
+      
+      const idToken = response.credential;
+
+      try {
+        const res = await fetch('http://localhost:3000/auth/google/token', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ idToken })
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+          const { token, user } = data;
+          document.getElementById('user-info').innerHTML = `
+            <h2>Bem-vindo, ${user.name}</h2>
+            <img src="${user.picture}" width="100" />
+            <p>Email: ${user.email}</p>
+          `;
+
+          document.getElementById('btn-login').style.display = 'none';
+        } else {
+          alert(data.message || 'Erro no login');
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Erro ao conectar à API');
+      }
+    }
+  </script>
+</body>
+</html>

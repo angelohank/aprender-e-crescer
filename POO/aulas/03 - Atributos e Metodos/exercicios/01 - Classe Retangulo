@@ -1,0 +1,7 @@
+Crie uma classe Retangulo com atributos largura e altura recebidos no __init__. 
+
+Implemente dois métodos: 
+- calcular_area(self) que retorna a área
+- calcular_perimetro(self) que retorna o perímetro. 
+
+Crie dois retângulos diferentes e exiba os resultados de ambos.
