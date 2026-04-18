@@ -1,0 +1,20 @@
+Exercício 1 — Construtor alternativo simples
+
+Enunciado:
+Crie uma classe Produto com os atributos:
+- nome
+- preco
+
+A classe deve permitir criar objetos de duas formas:
+
+1. Forma normal:
+Produto("Notebook", 3500)
+
+2. A partir de uma string:
+Produto.from_string("Notebook,3500")
+
+Requisitos:
+- Criar um método de classe from_string
+- A string virá no formato: "nome,preco"
+- Converter o preço para float
+- Retornar uma instância da classe

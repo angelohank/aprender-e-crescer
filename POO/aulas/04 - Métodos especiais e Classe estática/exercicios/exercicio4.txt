@@ -1,0 +1,4 @@
+Crie uma classe Matematica com um método estático que:
+
+recebe um número
+retorna o quadrado desse número

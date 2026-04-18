@@ -1,0 +1,5 @@
+Crie uma classe Validador com um método estático que:
+
+recebe uma senha
+retorna True se ela tiver pelo menos 8 caracteres
+retorna False caso contrário

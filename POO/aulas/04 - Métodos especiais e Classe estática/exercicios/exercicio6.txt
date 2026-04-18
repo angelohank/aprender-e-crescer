@@ -1,0 +1,48 @@
+Exercício — Que tipo de método usar?
+
+Instruções:
+Para cada situação abaixo, responda:
+
+1. O método deve ser:
+   - ( ) Instância (self)
+   - ( ) Classe (@classmethod)
+   - ( ) Estático (@staticmethod)
+
+2. Explique rapidamente o porquê
+
+
+Situação 1:
+Um método que retorna o saldo atual de uma conta bancária.
+- Ele usa o valor armazenado dentro do objeto.
+
+
+Situação 2:
+Um método que altera a taxa de juros para todas as contas do sistema.
+- Essa taxa é compartilhada entre todas as contas.
+
+
+Situação 3:
+Um método que verifica se um CPF tem o número correto de dígitos.
+- Ele recebe um CPF e retorna True ou False
+- Não usa nenhum atributo da classe ou do objeto
+
+
+Situação 4:
+Um método que cria uma conta bancária a partir de um dicionário:
+dados = {"titular": "João", "saldo": 1000}
+
+
+Situação 5:
+Um método que calcula o valor de um desconto:
+valor_final = valor - (valor * desconto)
+- Não depende de nenhum dado da classe
+
+
+Situação 6:
+Um método que altera o nome do titular da conta.
+- Ele modifica um dado específico de um objeto
+
+
+Situação 7:
+Um método que retorna quantas contas já foram criadas.
+- Existe um contador armazenado na classe

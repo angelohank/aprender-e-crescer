@@ -1,0 +1,9 @@
+Crie uma classe Usuario com:
+
+atributo email
+
+E um método estático que:
+
+valida se o email contém "@" e "."
+
+No __init__, use esse método para validar antes de criar o objeto.

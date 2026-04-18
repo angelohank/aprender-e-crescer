@@ -1,0 +1,28 @@
+Exercício 2 — Importação com regra de negócio
+
+Enunciado:
+Crie uma classe Funcionario com:
+- nome
+- salario
+- cargo
+
+Agora implemente duas formas de criação:
+
+1. Manual:
+Funcionario("Ana", 3000, "dev")
+
+2. A partir de lista de dicionários (simulando JSON/CSV):
+
+dados = [
+    {"nome": "João", "salario": "4000", "cargo": "dev"},
+    {"nome": "Maria", "salario": "5000", "cargo": "gerente"}
+]
+
+funcionarios = Funcionario.from_dict_list(dados)
+
+Requisitos:
+- Criar método @classmethod from_dict_list
+- Converter salario para float
+- Retornar uma lista de objetos
+- Aplicar regra:
+  - Se cargo for "gerente", aumentar salário em 20%
