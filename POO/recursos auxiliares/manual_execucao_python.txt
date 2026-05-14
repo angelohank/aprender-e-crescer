@@ -1,0 +1,109 @@
+Manual básico: como executar scripts Python no VS Code
+
+Passo 1 — Criar uma pasta para seus projetos
+
+1. Vá até sua Área de Trabalho (ou outro local fácil).
+2. Clique com botão direito → Novo > Pasta
+3. Dê um nome simples e claro, por exemplo:
+
+meus_scripts_python
+
+Esse será o lugar onde você vai salvar seus arquivos .py
+
+Passo 2 — Abrir essa pasta no VS Code
+
+1. Abra o VS Code
+2. Clique em Arquivo > Abrir Pasta
+3. Selecione a pasta meus_scripts_python
+4. Clique em Selecionar Pasta
+
+Agora tudo que você criar ficará organizado dentro dela.
+
+Passo 3 — Criar seu primeiro script
+
+1. No VS Code, clique no ícone de Novo Arquivo
+2. Nomeie o arquivo como:
+
+hello.py
+
+Muito importante:
+
+* O nome precisa terminar com .py
+
+3. Dentro do arquivo, digite:
+
+print("Olá, mundo!")
+
+4. Salve o arquivo (Ctrl + S)
+
+Passo 4 — Executar o script
+
+Você tem duas formas principais:
+
+Método 1: Pelo botão "Run"
+
+1. Com o arquivo aberto
+2. Clique no botão de executar (ícone de play no canto superior direito)
+3. Veja o resultado no terminal:
+
+Olá, mundo!
+
+Método 2: Pelo terminal (recomendado para aprender)
+
+1. No VS Code, vá em:
+   Terminal > Novo Terminal
+
+2. Vai abrir um terminal na parte de baixo
+
+3. Confirme que você está na pasta certa:
+
+Deve aparecer algo parecido com:
+
+.../meus_scripts_python
+
+Se não estiver, digite:
+
+cd caminho/da/sua/pasta
+
+Exemplo no Windows:
+
+cd Desktop\meus_scripts_python
+
+4. Execute o script:
+
+python hello.py
+
+ou, em alguns sistemas:
+
+python3 hello.py
+
+Resultado esperado:
+
+Olá, mundo!
+
+Problemas comuns (e como resolver)
+
+"python não é reconhecido"
+Python não está no PATH
+Solução: reinstalar o Python marcando "Add to PATH"
+
+Arquivo não encontrado
+Exemplo:
+python: can't open file 'hello.py'
+
+Você não está na pasta correta
+Use cd para entrar na pasta certa
+
+Nada acontece ao clicar em "Run"
+Extensão Python pode não estar instalada
+Instale a extensão oficial do Python no VS Code
+
+Dica importante (boa prática)
+
+Sempre use essa estrutura:
+
+meus_scripts_python/
+│
+├── hello.py
+├── teste.py
+└── outro_script.py
