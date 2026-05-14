@@ -1,0 +1,17 @@
+Exercício 4: Sistema de Cadastro de Produtos em Loja
+
+Em lojas físicas ou e-commerces, produtos são cadastrados com informações básicas. Alguns dados são essenciais (nome e preço), mas outros podem ter valores padrão caso não sejam informados no momento do cadastro.
+Requisitos:
+
+O construtor deve exigir apenas nome e preco
+categoria deve ter valor padrão "Geral"
+estoque deve ter valor padrão 0
+disponivel deve ter valor padrão True
+Crie três instâncias:
+
+Uma passando só nome e preço
+Outra passando nome, preço e categoria
+Outra passando todos os parâmetros
+
+
+Implemente exibir_info(self) que mostra todos os atributos do produto

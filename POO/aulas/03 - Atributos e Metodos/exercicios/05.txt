@@ -1,0 +1,16 @@
+Exercício 2: Sistema de Cadastro de Livros em Biblioteca
+Bibliotecas precisam catalogar livros com informações essenciais. O título e autor são obrigatórios, mas outros dados podem ser preenchidos depois ou ter valores padrão.
+Requisitos:
+
+O construtor deve exigir apenas titulo e autor
+ano_publicacao deve ter valor padrão 2024
+genero deve ter valor padrão "Não classificado"
+emprestado deve ter valor padrão False
+Crie três instâncias:
+
+Uma passando só título e autor
+Outra passando título, autor e ano de publicação
+Outra passando todos os parâmetros
+
+
+Implemente mostrar_detalhes(self) que exibe todos os atributos do livro
