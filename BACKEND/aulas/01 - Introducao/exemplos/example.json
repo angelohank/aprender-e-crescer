@@ -1,0 +1,7 @@
+{
+  "nome": "Lucas",
+  "idade": 19,
+  "esta_matriculado": true,
+  "curso": "Aprender E Crescer",
+  "linguagens": ["Java", "Python", "JavaScript"]
+}
