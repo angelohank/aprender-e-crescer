@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Buscar Livros</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+      h1 {
+        font-size: 1.4rem;
+      }
+      #buscar {
+        padding: 8px 16px;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+      #resultado {
+        margin-top: 20px;
+      }
+      .livro {
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 10px 14px;
+        margin-bottom: 8px;
+      }
+      .livro strong {
+        color: #333;
+      }
+      #status {
+        margin-top: 10px;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Buscar Livros</h1>
+    <button id="buscar">Buscar</button>
+    <div id="status"></div>
+    <div id="resultado"></div>
+
+    <script>
+      const btnBuscar = document.getElementById("buscar");
+      const divResultado = document.getElementById("resultado");
+      const divStatus = document.getElementById("status");
+
+      btnBuscar.addEventListener("click", async () => {
+        divResultado.innerHTML = "";
+        divStatus.textContent = "Buscando...";
+
+        try {
+          const resposta = await fetch("http://localhost:3000/livros");
+
+          if (!resposta.ok) {
+            throw new Error("Erro na requisição: " + resposta.status);
+          }
+
+          const livros = await resposta.json();
+          console.log("Livros recebidos:", livros);
+          divStatus.textContent = "";
+
+          if (!Array.isArray(livros) || livros.length === 0) {
+            divResultado.textContent = "Nenhum livro encontrado.";
+            return;
+          }
+
+          livros.forEach((livro) => {
+            const item = document.createElement("div");
+            item.className = "livro";
+            item.innerHTML = `<strong>ID:</strong> ${livro.id} — <strong>Nome:</strong> ${livro.titulo}`;
+            divResultado.appendChild(item);
+          });
+        } catch (erro) {
+          divStatus.textContent = "";
+          divResultado.textContent = "Erro ao buscar livros: " + erro.message;
+        }
+      });
+    </script>
+  </body>
+</html>
