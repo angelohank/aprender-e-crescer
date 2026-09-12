@@ -2,82 +2,78 @@
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <title>Buscar Livros</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        max-width: 600px;
-        margin: 40px auto;
-        padding: 0 20px;
-      }
-      h1 {
-        font-size: 1.4rem;
-      }
-      #buscar {
-        padding: 8px 16px;
-        font-size: 1rem;
-        cursor: pointer;
-      }
-      #resultado {
-        margin-top: 20px;
-      }
-      .livro {
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        padding: 10px 14px;
-        margin-bottom: 8px;
-      }
-      .livro strong {
-        color: #333;
-      }
-      #status {
-        margin-top: 10px;
-        color: #666;
-      }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Biblioteca · Livros</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1>Buscar Livros</h1>
-    <button id="buscar">Buscar</button>
-    <div id="status"></div>
-    <div id="resultado"></div>
+    <main class="container">
+      <header class="header">
+        <h1>Biblioteca</h1>
+        <p class="subtitle">Consulte, adicione, edite e remova livros.</p>
+      </header>
 
-    <script>
-      const btnBuscar = document.getElementById("buscar");
-      const divResultado = document.getElementById("resultado");
-      const divStatus = document.getElementById("status");
+      <section class="busca">
+        <input
+          id="campoBusca"
+          type="text"
+          placeholder="Buscar por nome do livro..."
+          autocomplete="off"
+        />
+        <button id="btnBuscar" class="btn">Buscar</button>
+      </section>
 
-      btnBuscar.addEventListener("click", async () => {
-        divResultado.innerHTML = "";
-        divStatus.textContent = "Buscando...";
+      <section class="add">
+        <button id="btnMostrarForm" class="btn btn-secundario">
+          + Adicionar livro
+        </button>
 
-        try {
-          const resposta = await fetch("http://localhost:3000/livros");
+        <form id="formAdicionar" class="form-add hidden">
+          <div class="campo">
+            <label for="novoTitulo">Título</label>
+            <input id="novoTitulo" type="text" required />
+          </div>
+          <div class="campo">
+            <label for="novoAutor">Autor</label>
+            <input id="novoAutor" type="text" required />
+          </div>
+          <div class="form-acoes">
+            <button type="submit" class="btn">Salvar</button>
+            <button type="button" id="btnCancelarAdd" class="btn btn-texto">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      </section>
 
-          if (!resposta.ok) {
-            throw new Error("Erro na requisição: " + resposta.status);
-          }
+      <p id="status" class="status" role="status"></p>
 
-          const livros = await resposta.json();
-          console.log("Livros recebidos:", livros);
-          divStatus.textContent = "";
+      <div id="resultado" class="resultado"></div>
+    </main>
 
-          if (!Array.isArray(livros) || livros.length === 0) {
-            divResultado.textContent = "Nenhum livro encontrado.";
-            return;
-          }
+    <div id="modalEditar" class="modal-overlay hidden">
+      <div
+        class="modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitulo"
+      >
+        <h2 id="modalTitulo">Editar livro</h2>
+        <div class="campo">
+          <label for="editTitulo">Título</label>
+          <input id="editTitulo" type="text" required />
+        </div>
+        <div class="campo">
+          <label for="editAutor">Autor</label>
+          <input id="editAutor" type="text" required />
+        </div>
+        <div class="form-acoes">
+          <button id="btnAtualizar" class="btn">Atualizar</button>
+          <button id="btnCancelarEdit" class="btn btn-texto">Cancelar</button>
+        </div>
+      </div>
+    </div>
 
-          livros.forEach((livro) => {
-            const item = document.createElement("div");
-            item.className = "livro";
-            item.innerHTML = `<strong>ID:</strong> ${livro.id} — <strong>Nome:</strong> ${livro.titulo}`;
-            divResultado.appendChild(item);
-          });
-        } catch (erro) {
-          divStatus.textContent = "";
-          divResultado.textContent = "Erro ao buscar livros: " + erro.message;
-        }
-      });
-    </script>
+    <script src="script.js"></script>
   </body>
 </html>

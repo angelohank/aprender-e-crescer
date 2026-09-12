@@ -44,6 +44,7 @@ let livros = [
 ];
 
 app.get("/livros", (req, res) => {
+  //receber query
   console.log("GET /livros");
   res.json(livros);
 });

@@ -1,0 +1,297 @@
+:root {
+  --azul: #3b82f6;
+  --azul-escuro: #2563eb;
+  --azul-claro: #eaf2ff;
+  --cinza-texto: #334155;
+  --cinza-suave: #64748b;
+  --cinza-borda: #e2e8f0;
+  --branco: #ffffff;
+  --fundo: #f5f7fa;
+  --vermelho: #ef4444;
+  --vermelho-escuro: #dc2626;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--cinza-texto);
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 48px 20px 80px;
+}
+
+.header h1 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin: 0 0 4px;
+  color: #1e293b;
+}
+
+.subtitle {
+  margin: 0 0 28px;
+  color: var(--cinza-suave);
+  font-size: 0.95rem;
+}
+
+/* Busca */
+
+.busca {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.busca input {
+  flex: 1;
+}
+
+/* Inputs genéricos */
+
+input[type="text"] {
+  padding: 10px 12px;
+  font-size: 0.95rem;
+  border: 1px solid var(--cinza-borda);
+  border-radius: 8px;
+  background: var(--branco);
+  color: var(--cinza-texto);
+}
+
+input[type="text"]:focus-visible {
+  outline: 2px solid var(--azul);
+  outline-offset: 1px;
+  border-color: var(--azul);
+}
+
+/* Botões */
+
+.btn {
+  background: var(--azul);
+  color: var(--branco);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn:hover {
+  background: var(--azul-escuro);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--azul-escuro);
+  outline-offset: 2px;
+}
+
+.btn:disabled {
+  background: var(--cinza-borda);
+  color: var(--cinza-suave);
+  cursor: default;
+}
+
+.btn-secundario {
+  background: var(--branco);
+  color: var(--azul);
+  border: 1px solid var(--azul);
+}
+
+.btn-secundario:hover {
+  background: var(--azul-claro);
+}
+
+.btn-texto {
+  background: transparent;
+  color: var(--cinza-suave);
+  padding: 10px 12px;
+}
+
+.btn-texto:hover {
+  background: var(--fundo);
+  color: var(--cinza-texto);
+}
+
+/* Formulário de adicionar */
+
+.add {
+  margin-bottom: 20px;
+}
+
+.form-add {
+  margin-top: 12px;
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.campo label {
+  font-size: 0.85rem;
+  color: var(--cinza-suave);
+}
+
+.campo input {
+  width: 100%;
+}
+
+.form-acoes {
+  display: flex;
+  gap: 8px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* Status */
+
+.status {
+  min-height: 1.2em;
+  color: var(--cinza-suave);
+  font-size: 0.9rem;
+}
+
+/* Lista de livros */
+
+.resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.livro {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-left: 3px solid var(--azul);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.livro-info {
+  min-width: 0;
+}
+
+.livro .titulo {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.livro .autor {
+  color: var(--cinza-suave);
+  font-size: 0.88rem;
+  margin-top: 2px;
+}
+
+.livro .id {
+  color: var(--cinza-suave);
+  font-size: 0.8rem;
+  margin-top: 2px;
+}
+
+.livro-acoes {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.icon-btn {
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--cinza-suave);
+  transition:
+    background 0.15s ease,
+    color 0.15s ease;
+}
+
+.icon-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.icon-btn:hover {
+  background: var(--azul-claro);
+  color: var(--azul-escuro);
+}
+
+.icon-btn.excluir:hover {
+  background: #fee2e2;
+  color: var(--vermelho-escuro);
+}
+
+/* Estados vazios e de erro */
+
+.vazio,
+.erro {
+  background: var(--branco);
+  border: 1px solid var(--cinza-borda);
+  border-radius: 8px;
+  padding: 16px;
+  color: var(--cinza-suave);
+  text-align: center;
+}
+
+.erro {
+  border-left: 3px solid var(--vermelho);
+  color: #b91c1c;
+  text-align: left;
+}
+
+/* Modal de edição */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--branco);
+  border-radius: 10px;
+  padding: 24px;
+  width: 100%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.15);
+}
+
+.modal h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #1e293b;
+}
