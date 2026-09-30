@@ -79,7 +79,7 @@ btnAtualizar.addEventListener("click", () => {
 
 // ---------- Busca ----------
 
-async function buscarLivros(nome = "") {
+async function buscarLivros(id = "") {
   divResultado.innerHTML = "";
   divStatus.textContent = "Buscando livros...";
   btnBuscar.disabled = true;
@@ -87,7 +87,7 @@ async function buscarLivros(nome = "") {
   try {
     // TODO: ajustar a rota de busca por nome no backend.
     // GET /livros?nome=valor (retornando todos quando "nome" vier vazio)
-    const url = nome ? `${API_URL}?nome=${encodeURIComponent(nome)}` : API_URL;
+    const url = id ? `${API_URL}/${id}` : API_URL;
     const resposta = await fetch(url);
 
     if (!resposta.ok) {
@@ -118,7 +118,7 @@ async function adicionarLivro(titulo, autor) {
     const resposta = await fetch(API_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ titulo, autor }),
+      body: JSON.stringify({ dsTitulo: titulo, dsAutor: autor }),
     });
 
     if (!resposta.ok) {
@@ -146,7 +146,10 @@ async function excluirLivro(id) {
   try {
     // TODO: rota de exclusão ainda não implementada no backend.
     // DELETE /livros/:id
-    const resposta = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+
+    const resposta = await fetch(`${API_URL}/${id}`, {
+      method: "DELETE",
+    });
 
     if (!resposta.ok) {
       throw new Error("Erro na requisição: " + resposta.status);
@@ -163,9 +166,9 @@ async function excluirLivro(id) {
 // ---------- Editar ----------
 
 function abrirModalEdicao(livro) {
-  idEmEdicao = livro.id;
-  editTitulo.value = livro.titulo || "";
-  editAutor.value = livro.autor || "";
+  idEmEdicao = livro.idLivro;
+  editTitulo.value = livro.dsTitulo || "";
+  editAutor.value = livro.dsAutor || "";
   modalEditar.classList.remove("hidden");
   editTitulo.focus();
 }
@@ -176,17 +179,15 @@ function fecharModalEdicao() {
 }
 
 async function atualizarLivro(id, titulo, autor) {
-  if (!titulo || !autor) return;
-
   divStatus.textContent = "Atualizando livro...";
 
   try {
     // TODO: rota de atualização ainda não implementada no backend.
     // PUT /livros/:id (ou PATCH), body: { titulo, autor }
     const resposta = await fetch(`${API_URL}/${id}`, {
-      method: "PUT",
+      method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ titulo, autor }),
+      body: JSON.stringify({ dsTitulo: titulo, dsAutor: autor }),
     });
 
     if (!resposta.ok) {
@@ -224,15 +225,15 @@ function renderizarLivros(livros) {
 
     const titulo = document.createElement("div");
     titulo.className = "titulo";
-    titulo.textContent = livro.titulo;
+    titulo.textContent = livro.dsTitulo;
 
     const autor = document.createElement("div");
     autor.className = "autor";
-    autor.textContent = livro.autor || "Autor não informado";
+    autor.textContent = livro.dsAutor || "Autor não informado";
 
     const id = document.createElement("div");
     id.className = "id";
-    id.textContent = "ID: " + livro.id;
+    id.textContent = "ID: " + livro.idLivro;
 
     info.appendChild(titulo);
     info.appendChild(autor);
@@ -251,7 +252,7 @@ function renderizarLivros(livros) {
     btnExcluir.className = "icon-btn excluir";
     btnExcluir.title = "Excluir livro";
     btnExcluir.innerHTML = ICONE_EXCLUIR;
-    btnExcluir.addEventListener("click", () => excluirLivro(livro.id));
+    btnExcluir.addEventListener("click", () => excluirLivro(livro.idLivro));
 
     acoes.appendChild(btnEditar);
     acoes.appendChild(btnExcluir);
