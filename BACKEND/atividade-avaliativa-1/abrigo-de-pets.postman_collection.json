@@ -1,0 +1,738 @@
+{
+  "info": {
+    "name": "Abrigo de Pets - Atividade Avaliativa API REST",
+    "description": "# Abrigo de Pets 🐶🐱\n\nConstrua uma API REST para um abrigo de animais, aplicando o que vimos na `minha-primeira-api`: **Express + roteador + controller**, sem autenticação e sem banco de dados (os dados ficam em um array na memória).\n\n## Modelo do pet\n| campo | tipo | observação |\n|---|---|---|\n| `idPet` | número | gerado pela API |\n| `dsNome` | texto | obrigatório |\n| `dsEspecie` | texto | obrigatório (cachorro, gato, coelho...) |\n| `nuIdade` | número | obrigatório, 0 ou mais |\n| `fgAdotado` | booleano | começa sempre `false` |\n\n## Como usar\n1. Suba sua API em `http://localhost:3000` (a variável `baseUrl` da collection pode ser alterada)\n2. Deixe ao menos 1 pet com `idPet: 1` no array inicial do controller\n3. Rode a pasta **Rotas principais** em ordem (botão *Run*): a aba *Test Results* mostra o que está passando\n4. Depois rode a pasta **Casos de erro** para conferir as validações\n\nObs.: a pasta *Casos de erro* usa os ids `1` e `9999` fixos. O `1` deve existir e o `9999` não.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Rotas principais",
+      "description": "As 5 rotas da atividade. Rode em ordem: o POST guarda o id do pet criado em `{{petId}}` para o PATCH e o DELETE usarem.",
+      "item": [
+        {
+          "name": "1. GET findAll - listar todos os pets",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Resposta é um array\", function () { pm.expect(pm.response.json()).to.be.an(\"array\"); });",
+                  "pm.test(\"Cada pet tem os campos do modelo\", function () {",
+                  "  pm.response.json().forEach(function (pet) {",
+                  "    pm.expect(pet).to.have.all.keys(\"idPet\", \"dsNome\", \"dsEspecie\", \"nuIdade\", \"fgAdotado\");",
+                  "  });",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "**Lista todos os pets do abrigo.**\n\n- Status esperado: `200`\n- Body: array de pets (pode estar vazio `[]`, mas deve ser um array)\n\nFormato de cada pet:\n```json\n{ \"idPet\": 1, \"dsNome\": \"Rex\", \"dsEspecie\": \"cachorro\", \"nuIdade\": 3, \"fgAdotado\": false }\n```"
+          }
+        },
+        {
+          "name": "2. GET findOne - buscar um pet pelo id",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "pm.test(\"Retorna o pet com o id pedido\", function () {",
+                  "  pm.expect(pm.response.json().idPet).to.eql(parseInt(pm.collectionVariables.get(\"petId\")));",
+                  "});",
+                  "pm.test(\"Pet tem os campos do modelo\", function () {",
+                  "  pm.expect(pm.response.json()).to.have.all.keys(\"idPet\", \"dsNome\", \"dsEspecie\", \"nuIdade\", \"fgAdotado\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/{{petId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "{{petId}}"
+              ]
+            },
+            "description": "**Busca um pet pelo identificador.**\n\n- Encontrou: `200` + o objeto do pet\n- Id não numérico (ex.: `/pets/abc`): `400` + `{ \"mensagem\": \"identificador deve ser um numero\" }`\n- Id numérico que não existe: `404` (sem body)\n\nA variável `{{petId}}` começa valendo `1`. Garanta que existe um pet com id 1 no array inicial do controller."
+          }
+        },
+        {
+          "name": "3. POST criar - cadastrar um pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", function () { pm.response.to.have.status(201); });",
+                  "const pet = pm.response.json();",
+                  "pm.test(\"Pet criado tem id gerado pela API\", function () { pm.expect(pet.idPet).to.be.a(\"number\"); });",
+                  "pm.test(\"Dados enviados foram salvos\", function () {",
+                  "  pm.expect(pet.dsNome).to.eql(\"Thor\");",
+                  "  pm.expect(pet.dsEspecie).to.eql(\"cachorro\");",
+                  "  pm.expect(pet.nuIdade).to.eql(2);",
+                  "});",
+                  "pm.test(\"Pet novo começa com fgAdotado = false\", function () { pm.expect(pet.fgAdotado).to.eql(false); });",
+                  "// guarda o id do pet criado para as próximas requisições (PATCH / DELETE)",
+                  "pm.collectionVariables.set(\"petId\", pet.idPet);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "**Cadastra um novo pet.**\n\nBody obrigatório: `dsNome` (texto), `dsEspecie` (texto) e `nuIdade` (número, 0 ou mais).\n\nRegras:\n- O `idPet` é gerado pela API (incrementa a cada cadastro, como nos livros)\n- `fgAdotado` **não** vem no body: todo pet novo começa com `false`\n- Sucesso: `201` + o pet criado\n- Faltando campo ou `nuIdade` inválido: `400` + `{ \"mensagem\": \"...\" }`",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Thor\",\n  \"dsEspecie\": \"cachorro\",\n  \"nuIdade\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "4. PATCH editar - atualizar um pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", function () { pm.response.to.have.status(200); });",
+                  "const pet = pm.response.json();",
+                  "pm.test(\"Campo enviado foi alterado\", function () { pm.expect(pet.fgAdotado).to.eql(true); });",
+                  "pm.test(\"Campos não enviados foram preservados\", function () {",
+                  "  pm.expect(pet.dsNome).to.be.a(\"string\").and.not.empty;",
+                  "  pm.expect(pet.dsEspecie).to.be.a(\"string\").and.not.empty;",
+                  "  pm.expect(pet.nuIdade).to.be.a(\"number\");",
+                  "});",
+                  "pm.test(\"idPet não mudou\", function () {",
+                  "  pm.expect(pet.idPet).to.eql(parseInt(pm.collectionVariables.get(\"petId\")));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/{{petId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "{{petId}}"
+              ]
+            },
+            "description": "**Atualiza parcialmente um pet.** O body pode ter *qualquer combinação* destes campos: `dsNome`, `dsEspecie`, `nuIdade`, `fgAdotado`. Só o que for enviado é alterado; o resto permanece igual.\n\nRegras:\n- Sucesso: `200` + o pet já atualizado\n- Id não numérico: `400`\n- Pet não existe: `404`\n- Body sem nenhum campo válido (ex.: `{}`): `400`\n- `nuIdade` negativo ou não numérico, ou `fgAdotado` que não seja booleano: `400`\n- O `idPet` **nunca** pode ser alterado\n\nEste exemplo marca o pet como adotado.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fgAdotado\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "5. DELETE deletar - remover um pet",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 204\", function () { pm.response.to.have.status(204); });",
+                  "pm.test(\"Resposta sem body\", function () { pm.expect(pm.response.text()).to.be.empty; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/{{petId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "{{petId}}"
+              ]
+            },
+            "description": "**Remove um pet.**\n\n- Sucesso: `204` (sem body)\n- Id não numérico: `400`\n- Pet não existe: `404`\n\nDica: depois de deletar, rode o GET findOne com o mesmo id. Agora ele deve retornar `404`."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Casos de erro (400 / 404)",
+      "description": "Validações e erros esperados. Cada requisição tem testes automáticos.",
+      "item": [
+        {
+          "name": "GET findOne - id não numérico (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Traz uma mensagem de erro\", function () { pm.expect(pm.response.json().mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "abc"
+              ]
+            },
+            "description": "Id que não é número deve retornar `400` com `{ \"mensagem\": \"identificador deve ser um numero\" }`."
+          }
+        },
+        {
+          "name": "GET findOne - pet inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "9999"
+              ]
+            },
+            "description": "Id numérico que não existe deve retornar `404`."
+          }
+        },
+        {
+          "name": "POST criar - sem dsNome (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });",
+                  "pm.test(\"Traz uma mensagem de erro\", function () { pm.expect(pm.response.json().mensagem).to.be.a(\"string\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "Falta `dsNome`: deve retornar `400` com mensagem.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsEspecie\": \"gato\",\n  \"nuIdade\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST criar - sem dsEspecie (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "Falta `dsEspecie`: deve retornar `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Mimi\",\n  \"nuIdade\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST criar - nuIdade negativo (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "`nuIdade` negativo é inválido: deve retornar `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Mimi\",\n  \"dsEspecie\": \"gato\",\n  \"nuIdade\": -5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST criar - nuIdade não numérico (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets"
+              ]
+            },
+            "description": "`nuIdade` enviado como texto é inválido: deve retornar `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Mimi\",\n  \"dsEspecie\": \"gato\",\n  \"nuIdade\": \"dois\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PATCH editar - id não numérico (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "abc"
+              ]
+            },
+            "description": "Id que não é número: `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Novo Nome\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PATCH editar - pet inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "9999"
+              ]
+            },
+            "description": "Pet que não existe: `404`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"dsNome\": \"Novo Nome\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PATCH editar - body vazio (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "1"
+              ]
+            },
+            "description": "Nenhum campo enviado: `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PATCH editar - nuIdade inválido (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "1"
+              ]
+            },
+            "description": "`nuIdade` negativo: `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nuIdade\": -1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "PATCH editar - fgAdotado não booleano (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pets/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "1"
+              ]
+            },
+            "description": "`fgAdotado` precisa ser `true` ou `false` (booleano, não texto): `400`.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"fgAdotado\": \"sim\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE deletar - id não numérico (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", function () { pm.response.to.have.status(400); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/abc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "abc"
+              ]
+            },
+            "description": "Id que não é número: `400`."
+          }
+        },
+        {
+          "name": "DELETE deletar - pet inexistente (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", function () { pm.response.to.have.status(404); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pets/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pets",
+                "9999"
+              ]
+            },
+            "description": "Pet que não existe: `404`."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "petId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
