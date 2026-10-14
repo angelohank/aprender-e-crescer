@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Demo de CORS</title>
+    <style>
+        :root {
+            --bg: #FAFAF7; --card: #F1F0EA; --ink: #17181C; --soft: #4B4F57; --muted: #6B6F76;
+            --line: #DAD9D1; --accent: #0E7C66; --accent-bg: #E3F0EC; --bad: #B4400C; --bad-bg: #FBEBE4;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; background: var(--bg); color: var(--ink); line-height: 1.5;
+            font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", sans-serif; }
+        main { max-width: 900px; margin: 0 auto; padding: 48px 24px 96px; }
+        h1 { font-size: 44px; font-weight: 500; margin: 0 0 4px; letter-spacing: -1px; }
+        .sub { color: var(--soft); margin: 0 0 32px; font-size: 18px; }
+        .mono, code { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+
+        .painel { background: var(--ink); color: #E6E6E1; border-radius: 16px; padding: 24px 28px; margin-bottom: 24px;
+            display: grid; gap: 14px; }
+        .painel .rotulo { font-size: 13px; letter-spacing: 2px; text-transform: uppercase; color: #A7ADB8; }
+        .painel .valor { font-size: 22px; color: #5EC8B1; }
+        select { font: inherit; font-size: 17px; padding: 10px 12px; border-radius: 10px; border: 1px solid #3A3D44;
+            background: #23252B; color: #FAFAF7; width: 100%; }
+
+        .botoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 32px; }
+        button.teste { text-align: left; font: inherit; background: var(--card); border: 1px solid var(--line);
+            border-radius: 14px; padding: 16px 18px; cursor: pointer; color: var(--ink); }
+        button.teste:hover { border-color: var(--accent); }
+        button.teste b { display: block; font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-size: 16px; font-weight: 500; }
+        button.teste span { display: block; color: var(--soft); font-size: 14px; margin-top: 4px; }
+
+        .topo-res { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .topo-res h2 { font-size: 22px; font-weight: 500; margin: 0; }
+        button.limpar { font: inherit; background: none; border: 1px solid var(--line); border-radius: 10px; padding: 6px 14px; cursor: pointer; color: var(--soft); }
+
+        .res { border-radius: 14px; padding: 18px 20px; margin-bottom: 12px; border-left: 6px solid var(--accent); background: var(--accent-bg); }
+        .res.erro { border-left-color: var(--bad); background: var(--bad-bg); }
+        .res .linha { display: flex; flex-wrap: wrap; gap: 6px 16px; align-items: baseline; }
+        .res .req { font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; font-weight: 500; }
+        .res .status { font-weight: 700; color: var(--accent); }
+        .res.erro .status { color: var(--bad); }
+        .res .url { color: var(--muted); font-size: 14px; font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; }
+        .res pre { margin: 10px 0 0; white-space: pre-wrap; word-break: break-word; font-size: 14px;
+            font-family: "JetBrains Mono", ui-monospace, Consolas, monospace; color: var(--ink); }
+        .res .dica { margin: 10px 0 0; font-size: 15px; color: var(--soft); }
+        .vazio { color: var(--muted); }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Demo de CORS</h1>
+    <p class="sub">Esta página chama uma API de <b>outra origem</b>. Escolha o cenário e clique nos testes.</p>
+
+    <section class="painel">
+        <div>
+            <div class="rotulo">Origem desta página</div>
+            <div class="valor mono" id="origem"></div>
+        </div>
+        <div>
+            <div class="rotulo">API que será chamada</div>
+            <select id="api">
+                <option value="3001">01 · Sem CORS — localhost:3001</option>
+                <option value="3002">02 · CORS aberto (*) — localhost:3002</option>
+                <option value="3003">03 · CORS só para http://localhost:5173 — localhost:3003</option>
+                <option value="3004">04 · CORS com credenciais (só :5173) — localhost:3004</option>
+            </select>
+        </div>
+    </section>
+
+    <section class="botoes" id="botoes"></section>
+
+    <div class="topo-res">
+        <h2>Resultados</h2>
+        <button class="limpar" id="limpar">Limpar</button>
+    </div>
+    <div id="resultados"><p class="vazio">Nenhum teste ainda. Abra também o Console (F12) e a aba Network.</p></div>
+</main>
+
+<script>
+    const TESTES = [
+        { titulo: "GET /usuarios", nota: "Requisição simples: sem preflight",
+            rota: "/usuarios", opcoes: {} },
+        { titulo: "POST /usuarios", nota: "JSON + Authorization: dispara preflight (OPTIONS)",
+            rota: "/usuarios",
+            opcoes: { method: "POST",
+                headers: { "Content-Type": "application/json", "Authorization": "Bearer token-de-exemplo" },
+                body: JSON.stringify({ nome: "Carla" }) } },
+        { titulo: "DELETE /usuarios/1", nota: "Método DELETE: dispara preflight",
+            rota: "/usuarios/1", opcoes: { method: "DELETE" } },
+        { titulo: "GET /login", nota: "credentials: include. A rota só existe no exemplo 04",
+            rota: "/login", opcoes: { credentials: "include" } },
+        { titulo: "GET /perfil", nota: "credentials: include. Só retorna logado se o cookie for enviado",
+            rota: "/perfil", opcoes: { credentials: "include" } },
+    ];
+
+    const $api = document.getElementById("api");
+    const $resultados = document.getElementById("resultados");
+    document.getElementById("origem").textContent = location.origin;
+
+    const base = () => "http://localhost:" + $api.value;
+
+    function mostrar({ ok, titulo, url, status, corpo, dica }) {
+        if ($resultados.querySelector(".vazio")) $resultados.innerHTML = "";
+        const card = document.createElement("div");
+        card.className = "res" + (ok ? "" : " erro");
+
+        const linha = document.createElement("div");
+        linha.className = "linha";
+        for (const [classe, texto] of [["req", titulo], ["status", status], ["url", url]]) {
+            const el = document.createElement("span");
+            el.className = classe;
+            el.textContent = texto;
+            linha.appendChild(el);
+        }
+        card.appendChild(linha);
+
+        if (corpo) {
+            const pre = document.createElement("pre");
+            pre.textContent = corpo;
+            card.appendChild(pre);
+        }
+        if (dica) {
+            const p = document.createElement("p");
+            p.className = "dica";
+            p.textContent = dica;
+            card.appendChild(p);
+        }
+        $resultados.prepend(card);
+    }
+
+    async function executar(teste) {
+        const url = base() + teste.rota;
+        try {
+            const resposta = await fetch(url, teste.opcoes);
+            const texto = await resposta.text();
+            const ok = resposta.ok;
+            mostrar({
+                ok, titulo: teste.titulo, url,
+                status: ok ? "OK " + resposta.status : "HTTP " + resposta.status + " (o CORS deixou passar)",
+                corpo: texto.slice(0, 400),
+                dica: ok ? "" : "A resposta chegou ao JavaScript, então o CORS foi aprovado. O erro é da rota, não do CORS.",
+            });
+        } catch (erro) {
+            mostrar({
+                ok: false, titulo: teste.titulo, url,
+                status: "BLOQUEADO / FALHOU",
+                corpo: erro.name + ": " + erro.message,
+                dica: "O navegador não conta ao JavaScript o motivo exato. Veja a mensagem completa no Console (F12) " +
+                    "e, na aba Network, veja se a requisição OPTIONS (preflight) apareceu.",
+            });
+        }
+    }
+
+    const $botoes = document.getElementById("botoes");
+    for (const teste of TESTES) {
+        const b = document.createElement("button");
+        b.className = "teste";
+        const t = document.createElement("b"); t.textContent = teste.titulo;
+        const n = document.createElement("span"); n.textContent = teste.nota;
+        b.append(t, n);
+        b.addEventListener("click", () => executar(teste));
+        $botoes.appendChild(b);
+    }
+
+    document.getElementById("limpar").addEventListener("click", () => {
+        $resultados.innerHTML = '<p class="vazio">Nenhum teste ainda. Abra também o Console (F12) e a aba Network.</p>';
+    });
+</script>
+</body>
+</html>
